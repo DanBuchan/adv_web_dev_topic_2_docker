@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y vim
 RUN apt-get update && apt-get install -y supervisor
 RUN mkdir -p /var/log/supervisor
 
+RUN DEBIAN_FRONTEND=noninteractive TZ="America/New_York" apt-get -y install tzdata
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
     git \
     sudo \
@@ -14,6 +16,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     gdb \
     build-essential \
     curl \
+    postgresql \
+    postgresql-client \
+    postgresql-contrib \
+    postgresql-server-dev-all \
     && rm -rf /var/lib/apt/lists/*
 
 # Python SDK
@@ -85,6 +91,28 @@ RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh;  workon advanced_w
 RUN echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc
 # RUN echo 'export WORKON_HOME=/home/coder/project/envs' >> ~/.bashrc
 RUN echo 'source /usr/local/bin/virtualenvwrapper.sh 2> /dev/null' >> ~/.bashrc
+RUN echo 'export LANGUAGE=en_US.UTF-8' >> ~/.bashrc
+RUN echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
+RUN echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
+RUN echo 'export LANGUAGE=en_US.UTF-8' >> /home/coder/.bashrc
+RUN echo 'export LANG=en_US.UTF-8' >> /home/coder/.bashrc
+RUN echo 'export LC_ALL=en_US.UTF-8' >> /home/coder/.bashrc
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+RUN locale-gen en_US.UTF-8
+RUN dpkg-reconfigure --frontend noninteractive locales
+RUN echo 'if [ ! -d /home/coder/project/django_databases ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases"; runuser -l  coder -c "cp -r /home/coder/project/tmp_db/* /home/coder/project/django_databases/"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_commit_ts ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_commit_ts 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_dynshmem ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_dynshmem 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_replslot ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_replslot 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_serial ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_serial 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_snapshots ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_snapshots 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_stat ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_stat 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_stat_tmp ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_stat_tmp 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_tblspc ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_tblspc 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_twophase ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_twophase 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'runuser -l  coder -c "chmod 0700 /home/coder/project/django_databases"' >> ~/.bashrc
+RUN echo "chmod uog+rw /var/run/postgresql" >> ~/.bashrc
+RUN echo 'runuser -l  coder -c "/usr/lib/postgresql/10/bin/postgres -D /home/coder/project/django_databases > /home/coder/project/django_databases/logfile 2>&1 &"' >> ~/.bashrc
 
 WORKDIR /home/coder/project
 
