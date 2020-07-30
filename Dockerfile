@@ -86,7 +86,7 @@ COPY ./download/public/desktop.jpg ./public/
 RUN pip3 install virtualenvwrapper
 ENV VIRTUALENVWRAPPER_PYTHON /usr/bin/python3
 RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh;  mkvirtualenv -p /usr/bin/python3 advanced_web_dev"
-RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh;  workon advanced_web_dev; pip install django==3.0.3"
+RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh;  workon advanced_web_dev; pip install django==3.0.3; pip install psycopg2"
 
 RUN echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc
 # RUN echo 'export WORKON_HOME=/home/coder/project/envs' >> ~/.bashrc
@@ -110,6 +110,9 @@ RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_stat ]; then runuser
 RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_stat_tmp ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_stat_tmp 2> /dev/null"; fi' >> ~/.bashrc
 RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_tblspc ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_tblspc 2> /dev/null"; fi' >> ~/.bashrc
 RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_twophase ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_twophase 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_logical ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_logical 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_logical/mappings ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_logical/mappings 2> /dev/null"; fi' >> ~/.bashrc
+RUN echo 'if [ ! -d /home/coder/project/django_databases/pg_logical/snapshots ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases/pg_logical/snapshots 2> /dev/null"; fi' >> ~/.bashrc
 RUN echo 'runuser -l  coder -c "chmod 0700 /home/coder/project/django_databases"' >> ~/.bashrc
 RUN echo "chmod uog+rw /var/run/postgresql" >> ~/.bashrc
 RUN echo 'runuser -l  coder -c "/usr/lib/postgresql/10/bin/postgres -D /home/coder/project/django_databases > /home/coder/project/django_databases/logfile 2>&1 &"' >> ~/.bashrc
