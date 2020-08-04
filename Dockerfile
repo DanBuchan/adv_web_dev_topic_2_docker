@@ -98,6 +98,7 @@ RUN echo 'export LANGUAGE=en_US.UTF-8' >> /home/coder/.bashrc
 RUN echo 'export LANG=en_US.UTF-8' >> /home/coder/.bashrc
 RUN echo 'export LC_ALL=en_US.UTF-8' >> /home/coder/.bashrc
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+RUN echo 'fs.inotify.max_user_watches=524288' >> /etc/sysctl.conf
 RUN locale-gen en_US.UTF-8
 RUN dpkg-reconfigure --frontend noninteractive locales
 RUN echo 'if [ ! -d /home/coder/project/django_databases ]; then runuser -l  coder -c "mkdir /home/coder/project/django_databases"; runuser -l  coder -c "cp -r /home/coder/project/tmp_db/* /home/coder/project/django_databases/"; fi' >> ~/.bashrc
